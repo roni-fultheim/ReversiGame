@@ -1,0 +1,24 @@
+Location: as is (R)
+
+Board:
+	Enum matrix
+	getter -> private (R)
+	boolean functions -> to add (R)
+	empty cells vector (Y)
+	IDEA: nothing outside of board should knwo how the board is implemented
+	
+Player:
+	same, split move(Y) function into hasNextMove(R), getNextMove(take from y) - returns index (int) in possible moves vector
+
+HumanPlayer: create (ConsolePlayer/HumanConsolePlayer)
+
+View, ConsoleView: as is (Y)
+
+Menu: create (accept new)
+
+MoveLogic, StandardMoveLogic, GameManager - TODO TOGETHER
+
+
+	
+	
+	
