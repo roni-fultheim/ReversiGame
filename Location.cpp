@@ -1,6 +1,6 @@
 /*
- * Roni Fultheim, ID: 313465965
- * Location.cpp
+ * Yael Hacmon, ID 313597897
+ * Roni Fultheim, ID 313465965
  */
 
 #include "Location.h"

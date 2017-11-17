@@ -1,6 +1,6 @@
 /*
- * Roni Fultheim, ID: 313465965
- * Location.h
+ * Yael Hacmon, ID 313597897
+ * Roni Fultheim, ID 313465965
  */
 
 #ifndef LOCATION_H_

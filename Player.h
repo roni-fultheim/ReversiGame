@@ -1,6 +1,6 @@
 /*
- * Roni Fultheim, ID: 313465965
- * Player.h
+ * Yael Hacmon, ID 313597897
+ * Roni Fultheim, ID 313465965
  */
 
 #ifndef PLAYER_H_

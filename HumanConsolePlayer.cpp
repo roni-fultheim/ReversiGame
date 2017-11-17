@@ -1,6 +1,6 @@
 /*
- * Roni Fultheim, ID: 313465965
- * HumanConsolePlayer.cpp
+ * Yael Hacmon, ID 313597897
+ * Roni Fultheim, ID 313465965
  */
 
 #include "HumanConsolePlayer.h"

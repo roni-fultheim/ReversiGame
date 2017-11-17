@@ -1,15 +1,9 @@
 /*
- * Roni Fultheim, ID: 313465965
- *
- * Board.cpp - implementation file
+ * Yael Hacmon, ID 313597897
+ * Roni Fultheim, ID 313465965
  */
 
-//includes for IO functions, use of vectors, and use of exit function
-#include <iostream>
 #include <cstdlib>
-#include <stdexcept>
-
-//include header file
 #include "Board.h"
 
 using namespace std;
@@ -19,7 +13,7 @@ Board::Board(int size): size_(size) {
 	//allocate array of pointers of squares to represent board's first column (size_= #of rows)
 	// wrapped in try-catch block as expected
 	try {
-		squares_ = new Square*[size_];
+		gameBoard_ = new ElementInBoard*[size_];
 	} catch (...) {
 		cout << "Allocation of board failed: EXITING GAME" << endl;
 		exit(0);
@@ -30,7 +24,7 @@ Board::Board(int size): size_(size) {
 		// allocate rows
 		// wrapped in try-catch block as expected
 		try {
-			squares_[i] = new Square[size_];
+			gameBoard_[i] = new ElementInBoard[size_];
 		} catch (...) {
 			cout << "Allocation of board failed: EXITING GAME" << endl;
 			exit(0);
@@ -38,33 +32,31 @@ Board::Board(int size): size_(size) {
 
 		// initialize empty squares
 		for (int j = 0 ; j< size_; j++) {
-			//square will be empty by default
-			squares_[i][j] = Square();
+			//a cell will be empty by default
+			gameBoard_[i][j] = EMPTY;
+			//adding cell to list of empty cells
+			emptyCells_.push_back(Location(i, j));
 		}
 	}
 
-	//initialize board for game - white is always at upper left corner of initialization square
+	//initialize board for the game - white is always at upper left corner of initialization square
 	//notice that c++ indexing requires to divide size in 2 then subtract 1 to reach the center of board
 	//initialize white squares
-	Location loc(size/2-1, size/2-1);
-	operateOnSquare(loc).makeWhite();
-	loc.set(size/2, size/2);
-	operateOnSquare(loc).makeWhite();
+	makeInColor(WHITE, Location(size_/2-1, size_/2-1));
+	makeInColor(WHITE, Location(size_/2, size_/2));
 	//initialize black squares
-	loc.set(size/2-1, size/2);
-	operateOnSquare(loc).makeBlack();
-	loc.set(size/2, size/2-1);
-	operateOnSquare(loc).makeBlack();
+	makeInColor(BLACK, Location(size_/2-1, size_/2));
+	makeInColor(BLACK, Location(size_/2, size_/2-1));
 }
 
 
 Board::~Board() {
 	//delete rows of matrix
 	for (int i = 0; i<size_; i++) {
-		delete squares_[i];
+		delete gameBoard_[i];
 	}
 	//delete first column
-	delete squares_;
+	delete gameBoard_;
 }
 
 
@@ -73,48 +65,41 @@ int Board::size() const {
 }
 
 
-bool Board::isSquareWhite(const Location& loc) const {
-	Square s = getSquare(loc);
-	return s.isWhite();
+bool Board::isCellWhite(const Location& loc) const {
+	return getCell(loc)==WHITE;
 }
 
 
-bool Board::isSquareBlack(const Location& loc) const {
-	Square s = getSquare(loc);
-	return s.isBlack();
+bool Board::isCellBlack(const Location& loc) const {
+	return getCell(loc)==BLACK;
 }
 
 
-bool Board::isSquareEmpty(const Location& loc) const {
-	Square s = getSquare(loc);
-	return s.isEmpty();
+bool Board::isCellEmpty(const Location& loc) const {
+	return getCell(loc)==EMPTY;
 }
 
 
-bool Board::compareSquareColors(const Location& loc1, const Location& loc2) const {
-	Square s1 = getSquare(loc1);
-	Square s2 = getSquare(loc2);
-	return s1.isSameColor(s2);
+bool Board::compareCellColors(const Location& loc1, const Location& loc2) const {
+	return getCell(loc1)==getCell(loc2);
 }
 
+bool Board::compareCellColors(const ElementInBoard& c, const Location& loc) const {
+	return getSquare(loc)==c;
+}
 
-void Board::makeInColor(const Color& c, const Location& loc) {
-	switch (c) {
-		case WHITE:
-			operateOnSquare(loc).makeWhite();
-			break;
-		case BLACK:
-			operateOnSquare(loc).makeBlack();
-			break;
-		default:
-			cout << "Problem: given color is not recognized - color must be black or white." << endl;
-			break;
+void Board::makeInColor(const ElementInBoard& c, const Location& loc) {
+	//if square is not empty - throw exception (cannot make a non-empty square in a color)
+	if (!isSquareEmpty(loc)) {
+		throw logic_error("Logic problem: tried switching an empty square's color\n");
 	}
-}
 
-
-bool Board::compareSquareColors(const Color& c, const Location& loc) const {
-	return getSquare(loc).isSameColor(c);
+	//else - change color of cell
+	gameBoard_[loc.row()][loc.column()] = c;
+	//remove from list of empty cells
+	emptyCells_.remove(loc);
+	//TODO  - could not use:
+	//removeCellFromEmptyList(loc);
 }
 
 
@@ -162,77 +147,27 @@ bool Board::isEdge(const Location& loc) const {
 }
 
 
-std::ostream &operator <<(std::ostream &out, const Board &b) {
-	// print column numbering (top row)
-	for (int i = 0; i < b.size_; i++) {
-		//print all numbers by given format
-		out << " | " << i+1;
-	}
-	//add last pipe and end line
-	out << " |" << endl;
-	//print first separator line
-	b.printSeparatorLine(out);
-
-	//print board by iterating over rows
-	for (int i = 0; i< b.size_; i++) {
-		//print row number
-		out << i+1;
-		//print rows
-		b.printRow(out, i);
-		//print separator line
-		b.printSeparatorLine(out);
-	}
-
-	return out;
+bool Board::isBoardFull() const {
+	//if list is empty - board is full
+	return emptyCells_.empty();
 }
 
 
-const Square& Board::getSquare(const Location& loc) const {
-	// check that square is in range of board, throw exception if not
-	if (!isInBoardRange(loc)) {
-		throw out_of_range("Problem: tried to get a square out of board range\t");
-	}
-
-	//returned constant, so that square cannot be changed
-	return squares_[loc.row()][loc.column()];
+std::list<Location>::const_iterator Board::emptyCellsBegin() const {
+	return emptyCells_.begin();
 }
 
 
-Square& Board::operateOnSquare(const Location& loc) {
-	// check that square is in range of board, throw exception if not
-	if (!isInBoardRange(loc)) {
-		throw out_of_range("Problem: tried to operate on a square out of board range\n");
-	}
-	//returned by reference, so that square can be acted upon
-	return squares_[loc.row()][loc.column()];
+std::list<Location>::const_iterator Board::emptyCellsEnd() const {
+	return emptyCells_.end();
 }
 
 
-std::ostream& Board::printSeparatorLine(std::ostream &out) const {
-	// print '-' as many times as needed, according to board size
-	// taking row numbering into consideration
-	// 4 '-' per a '|    ', plus one under the row number and under the last '|'
-	for (int i=0; i< size_*4+2 ; i++) {
-		out << "-";
-	}
-	//end row
-	out << endl;
-
-	return out;
+const Board::ElementInBoard& Board::getCell(const Location& loc) const {
+	return gameBoard_[loc.row()][loc.column()];
 }
 
 
-std::ostream& Board::printRow(std::ostream &out, int row) const {
-	// print '| ' then SQUARE ('  ' / 'X' / 'O') then another ' '
-	Location loc(0,0);
-	for (int i=0; i<size_; i++) {
-		out << "| ";
-		loc.set(row, i);
-		//getSquare(loc).print();
-		out << getSquare(loc) << " ";
-	}
-	// print the last '|' and then end line.
-	out << "|" << endl;
-
-	return out;
+void Board::removeCellFromEmptyList(Location& removalPoint) {
+	emptyCells_.remove(removalPoint);
 }
