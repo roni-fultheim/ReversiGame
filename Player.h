@@ -1,92 +1,113 @@
 /*
- * Yael Hacmon, ID 313597897
- * Roni Fultheim, ID 313465965
+ * Player.h
+ *
+ *  313297897
+ *  Author: yael
  */
 
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
-#include <string>
 #include <vector>
-#include "Color.h"
-#include "Location.h"
+#include "Point.h"
+#include "Board.h"
+using namespace std;
 
-/**
- * Repesenting a player in a Reversi game.
- * A player has a name and a color which represents him in the game.
- *
- * Abstract class, as there can be different types of players, which get their next moves in different ways.
- */
-class Player {
-	public:
-		/**
-		 * Constructor of Player. Name and color must be given.
-		 *
-		 * @param name player's name
-		 * @param c player's color
-		 */
-		Player(const std::string& name, const Color& c);
+//Reresent player in the game - his colour and his score
 
-		/**
-		 * Virtual destructor.
-		 */
-		virtual ~Player();
+class Player
+{
+public:
 
-		/**
-		 * Returns player's next move in game. Is not constant, since getting next
-		 * move can cause player's members to change.
-		 *
-		 * Pure virtual mbbethod that must be implemented in derived classes,
-		 * since getting the next move depends on the player's type.
-		 *
-		 * @return location of chosen square to make player's color
-		 */
-		virtual Location getNextMove() = 0;
+	typedef Board::ElementInBoard ColourOfPlayer;
 
-		/**
-		 * Returns the color representing this player in the game.
-		 * @return player color in the game
-		 */
-		Color getColor() const;
+	Player(ColourOfPlayer colour)
+	{
+		this->colour = colour;
+		score = 2;
+	}
 
-		/**
-		 * Returns the player's name in the game.
-		 *
-		 * @return player's name in the game
-		 */
-		const std::string& getName() const;
+	virtual ~Player() {}
 
-		/**
-		 * Return's the player's current possible moves, for examination only.
-		 * By reference, to avoid copying, constant - to avoid change.
-		 *
-		 * @return locations where the player could place a square with his color
-		 */
-		const std::vector<Location>& getPossibleMoves() const;
+	/**
+	 *
+	 * TODO
+	 * return true if the vector is not empty, false otherwise.
+	 *
+	 */
+	virtual bool validInput (Point &point) const =0;
 
-		/**
-		 * Checks if player has possible moves to make.
-		 *
-		 * @return locations where the player could place a square with his color
-		 */
-		bool hasPossibleMoves() const;
+	/**
+	 *
+	 * TODO
+	 * append a vector of possible moves,
+	 * retuern the index in the vector which the player choose.
+	 *
+	 * @param possibleMoves vector of possible moves to the player
+	 * @param row choice's player row
+	 * @paran col choice's player column
+	 */
+	virtual int moveByChoice(vector<Point> &possibleMoves, Point &point) const =0;
 
-		/**
-		 * Updates the current locations where the player can make his next move to a new vector of possible moves.
-		 * Keeping the vector constant ensures that it will be copied.
-		 *
-		 * @param locs vector of new possible moves
-		 */
-		void updatePossibleMoves(const std::vector<Location>& locs);
 
-	protected:
-		// name of player, cannot be changed during game
-		const std::string name_;
-		// color of player in the game, cannot be changed during game
-		const Color color_;
-		//vector of currently possible moves to be made by the player
-		std::vector<Location> possibleMoves_;
+	/**
+	 *
+	 * @return colour of player
+	 */
+	ColourOfPlayer getColor() const
+	{
+		return colour;
+	}
+
+	/**
+	 *
+	 * @return colour of opposing player
+	 */
+	ColourOfPlayer getOppColor() const
+	{
+		if (colour == Board::Black)
+		{
+			return Board::White;
+		}
+		return Board::Black;
+	}
+
+	/**
+	 * @return the player's name
+	 */
+	char strColor() const
+	{
+		if (colour == Board::Black)
+		{
+			return 'X';
+		}
+		return 'O';
+	}
+
+	/**
+	 * @return the player's score
+	 */
+	int gerScore()const
+	{
+		return score;
+	}
+
+	// if curPlayer "eat" the oppPlayer- the oppPlayer score decreases
+	void decreaseScore (int toDecrease)
+	{
+		score = score - toDecrease;
+	}
+	// if curPlayer "eat" the oppPlayer- he curPlayer score increases
+	void increaseScore (int toIncrease)
+	{
+		score = score + toIncrease;
+	}
+
+protected:
+
+	ColourOfPlayer colour;
+	int score;
+
 };
-
 
 #endif /* PLAYER_H_ */
