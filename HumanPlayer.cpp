@@ -1,59 +1,37 @@
 /*
+ * Roni Fultheim, ID: 313465965
  * HumanPlayer.cpp
- *
- *  Created on: Oct 27, 2017
- *      Author: yael
  */
-#include "HumanPlayer.h"
 
+#include "HumanPlayer.h"
 #include <iostream>
+#include <limits>
+
 using namespace std;
 
 
-HumanPlayer::HumanPlayer(ColourOfPlayer color):Player(color){}
+//constructor calling the parent class's (Player's) constructor
+HumanPlayer::HumanPlayer(const std::string& name, const Player::ColorOfPlayer& c): Player(name, c) {}
 
-bool HumanPlayer::validInput (Point &point)
-{
-	bool validInput = false;
-	int row;
-	int col;
-	// while the input is not valid - keep asking for valid one
-	while(!validInput)
-	{
-		cin >> row;
-		cin >> col;
-		//if the input type is not int - insert again
-		if(cin.fail())
-		{
-			cout << "Invalid input. Please insert integers numbers" << endl;
-			cin.clear();
-			cin.ignore();
-		}
-		else
-		{
-			// the input is valid
-			validInput = true;
-			point.x = row;
-			point.y = col;
-		}
-		return validInput;
+
+Location HumanPlayer::getNextMove(const ViewGame& v, const MoveLogic& logic, const Board& b, const Player& other) {
+	int row, column;
+
+	//ask the player to insert chosen location in the format (row column), space separated
+	v.messageEnterMove();
+	cin >> row >> column;
+
+	//input validation
+	while (cin.fail()) {
+		//clearing stream
+		cin.clear();
+		//ignoring the rest of the input
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		//re-asking for move
+		v.messageInvalidMove();
+		cin >> row >> column;
 	}
-}
 
-int HumanPlayer::moveByChoice(vector<Point> &possibleMoves, Point &point)
-{
-	// size of the vector which represent the possible moves
-	int possibleMovesSize = possibleMoves.size();
-
-	//check that the selected point is in the vector.
-	//also, update the index to be the position of the point in the vector.
-	for (int i=0; i<possibleMovesSize; ++i)
-	{
-		if(point == possibleMoves[i])
-		{
-			return i;
-		}
-	}
-	//if not found
-	return -1;
+	//translate to c++ indexing (starting from 0, not 1) and return as location
+	return Location (row-1, column-1);
 }

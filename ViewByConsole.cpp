@@ -1,8 +1,6 @@
 /*
- * ViewByConsole.cpp
- *
- *  313297897
- *  Author: yael
+ * Yael Hacmon, ID 313597897
+ * Roni Fultheim, ID 313465965
  */
 
 #include "ViewByConsole.h"
@@ -16,7 +14,7 @@ void ViewByConsole::printBoard(Board::ElementInBoard** board, int sizeOfBoard) c
 	cout << " | ";
 	for(int i=1; i<=sizeOfBoard ;++i)
 	{
-		 cout << i << " | ";
+		cout << i << " | ";
 	}
 	cout << endl;
 	// print spaces line
@@ -55,15 +53,13 @@ void ViewByConsole::messageForTurn(Player* curPlayer) const
 	cout<<curPlayer->strColor()<<": It's your move"<< endl;
 }
 
-void ViewByConsole::messagePossibleMoves(vector<Point> &possibleMoves) const
+void ViewByConsole::messagePossibleMoves(vector<Location> &possibleMoves) const
 {
 	int possibleMovesSize = possibleMoves.size();
 	cout<<"Your possible moves: ";
 	for (int i=0; i<possibleMovesSize; ++i)
 	{
-		int x = possibleMoves[i].getX() + 1;
-		int y = possibleMoves [i].getY() + 1;
-		cout << "(" << x << "," << y << ")";
+		cout << possibleMoves[i];
 		if( i == possibleMovesSize-1)
 		{
 			cout << endl;
@@ -76,6 +72,29 @@ void ViewByConsole::messagePossibleMoves(vector<Point> &possibleMoves) const
 	cout<<"Please enter your moves row,col:";
 }
 
+virtual Location ViewByConsole::getMoveFromPlayer() const
+{
+	int row;
+	int col;
+
+	//get player's move
+	messageEnterMove();
+	cin >> row;
+	cin >> col;
+
+	// input validation: while the input is not valid - keep asking for valid one
+	while(!cin.fail())
+	{
+		messageInvalidMove();
+		cin.clear();
+		cin.ignore();
+		cin >> row;
+		cin >> col;
+	}
+
+	return Location(row-1,col-1);
+}
+
 void ViewByConsole::messageEnterMove() const
 {
 	cout<<endl;
@@ -83,16 +102,20 @@ void ViewByConsole::messageEnterMove() const
 	cout<<"Please enter your move row,col:";
 }
 
-void ViewByConsole::messageInvalidMove() const
+void ViewByConsole::messageIllegalMove() const
 {
-	cout<<"invalid move- please try again!" << endl;
+	cout<<"Illegal move, please try again! Enter your move row,col: " << endl;
 }
 
-void ViewByConsole::messagePlayerMove(Point pointToDisplay, Player* curPlayer)const
+
+void ViewByConsole::messageInvalidMove() const
 {
-	int x = pointToDisplay.getX() +1;
-	int y = pointToDisplay.getY() +1;
-	cout<<curPlayer->strColor()<<" played"<< " ("<< x << ","<< y << ")\n" << endl;
+	cout<<"invalid move, please try again! Enter your move row,col: " << endl;
+}
+
+void ViewByConsole::messagePlayerMove(Location pointToDisplay, Player* curPlayer)const
+{
+	cout<<curPlayer->strColor()<<" played "<< pointToDisplay << endl;
 }
 
 void ViewByConsole::messageNoMoves() const

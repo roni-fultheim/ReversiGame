@@ -1,6 +1,6 @@
 /*
- * Yael Hacmon, ID 313597897
- * Roni Fultheim, ID 313465965
+ * Roni Fultheim, ID: 313465965
+ * MoveLogic.h
  */
 
 #ifndef MOVELOGIC_H_
@@ -104,7 +104,8 @@ class MoveLogic {
 		 * @return location of the next first square in the given board and range that matches the prevStart
 		 * 				 square's color, or if none are found - the location of prevStart.
 		 */
-		Location lastInColorRange(const Color pColor, const Location& prevStart, const Location& end, const Board* board) const;
+		Location lastInColorRange(const Player::ColorOfPlayer pColor, const Location& prevStart,
+				const Location& end, const Board* board) const;
 
 
 		/**

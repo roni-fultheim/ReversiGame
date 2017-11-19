@@ -1,6 +1,6 @@
 /*
- * Yael Hacmon, ID 313597897
- * Roni Fultheim, ID 313465965
+ * Roni Fultheim, ID: 313465965
+ * StandardMoveLogic.cpp
  */
 
 #include  "StandardMoveLogic.h"

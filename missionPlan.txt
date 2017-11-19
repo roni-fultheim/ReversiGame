@@ -10,7 +10,7 @@ Board:
 Player:
 	same, split move(Y) function into hasNextMove(R), getNextMove(take from y) - returns index (int) in possible moves vector
 
-HumanPlayer: create (ConsolePlayer/HumanConsolePlayer)
+HumanPlayer: create (ConsolePlayer/HumanPlayer)
 
 View, ConsoleView: as is (Y)
 

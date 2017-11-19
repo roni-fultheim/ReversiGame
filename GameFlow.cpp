@@ -3,16 +3,16 @@
  * Roni Fultheim, ID 313465965
  */
 
-#include "GameFlow.h"
+#include "GameManager.h"
 #include <iostream>
 
 using namespace std;
 
-GameFlow::GameFlow(Board* b, Player* black, Player* white, MoveLogic* log):
+GameManager::GameManager(Board* b, Player* black, Player* white, MoveLogic* log):
 		board_(b), black_(black), white_(white), logic_(log), lastMove_(-1,-1) {}
 
 
-void GameFlow::playGame() {
+void GameManager::playGame() {
 	//initialize moves for black and white players
 	logic_->updateMoveOptions(black_, board_);
 	logic_->updateMoveOptions(white_, board_);
@@ -79,7 +79,7 @@ void GameFlow::playGame() {
 }
 
 
-bool GameFlow::playTurn(Player* playing, Player* other) {
+bool GameManager::playTurn(Player* playing, Player* other) {
 	//if the playing player cannot play - notify, update and return false
 	if (!logic_->canPlayTurn(playing)) {
 		//print message and newline, using cin methods to implement waiting for enter
@@ -132,7 +132,7 @@ bool GameFlow::playTurn(Player* playing, Player* other) {
 }
 
 
-void GameFlow::showWinner() {
+void GameManager::showWinner() {
 	//get number of white and black squares from board
 	int whites = 0, blacks = 0;
 	Location curr(0,0);

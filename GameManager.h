@@ -1,6 +1,6 @@
 /*
- * Yael Hacmon, ID 313597897
- * Roni Fultheim, ID 313465965
+ * Roni Fultheim, ID: 313465965
+ * GameManager.h
  */
 
 #ifndef GameManager_H_
@@ -28,7 +28,7 @@ public:
 	 * @param white white player
 	 * @param log logic to handle moves
 	 */
-	GameManager(Board* b, Player* black, Player* white, MoveLogic* log);
+	GameManager(ViewGame* view, Board* b, Player* black, Player* white, MoveLogic* log);
 
 	/**
 	 * Plays game with the given board, players and logic.
@@ -39,17 +39,17 @@ private:
 	//board of game
 	Board* board_;
 
-	//black player - by reference, to allow polymorphism
-	Player* black_;
+	//current player - by reference, to allow polymorphism. Starting player is black by default.
+	Player* currPlayer_;
 
-	//white player - by reference, to allow polymorphism
-	Player* white_;
+	//white player - by reference, to allow polymorphism. Opposite player is black by default.
+	Player* oppPlayer_;
 
 	//handles logic of moves - by reference, to allow polymorphism
 	MoveLogic* logic_;
 
-	//location of last played move - must be allocated in
-	Location lastMove_;
+	//way to view game
+	ViewGame* view_;
 
 	/**
 	 * Plays turn of a given player. Method for clarity and code reuse.

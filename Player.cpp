@@ -5,7 +5,7 @@
 
 #include "Player.h"
 
-Player::Player(const std::string& name, const Color& c): name_(name), color_(c) {
+Player::Player(const std::string& name, const ColorOfPlayer& c): name_(name), color_(c), score_(2){
 	possibleMoves_ = std::vector<Location>();
 }
 
@@ -14,13 +14,18 @@ Player::Player(const std::string& name, const Color& c): name_(name), color_(c) 
 Player::~Player() {}
 
 
-Color Player::getColor() const {
+Player::ColorOfPlayer Player::getColor() const {
 	return color_;
 }
 
 
 const std::string& Player::getName() const {
 	return name_;
+}
+
+
+int Player::getScore() const {
+	return score_;
 }
 
 
@@ -42,4 +47,22 @@ void Player::updatePossibleMoves(const std::vector<Location>& locs) {
 }
 
 
+// if current Player "ate" the opposite Player - the opposite Player's score decreases
+void Player::decreaseScore (int toDecrease) {
+	score_ = score_ - toDecrease;
+}
 
+// if current Player "ate" the opposite Player - the opposite Player's score increases
+void Player::increaseScore (int toIncrease) {
+	score_ = score_ + toIncrease;
+}
+
+
+std::string Player::strColor() const
+{
+	if (color_ == Board::Black)
+	{
+		return 'X';
+	}
+	return 'O';
+}
