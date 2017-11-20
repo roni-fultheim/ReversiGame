@@ -60,7 +60,7 @@ void Player::increaseScore (int toIncrease) {
 
 std::string Player::strColor() const
 {
-	if (color_ == Board::Black)
+	if (color_ == Board::BLACK)
 	{
 		return 'X';
 	}

@@ -22,15 +22,15 @@ int main() {
 	cout << "Welcome to Reversi!" << endl;
 
 	//dynamically allocate objects of general types on heap
-	Board* b = new Board();
-	Player* p1 = new HumanPlayer("X", Player::ColorOfPlayer::BLACK);
-	Player* p2 = new HumanPlayer("O", Player::ColorOfPlayer::WHITE);
+	Board* baord = new Board();
+	Player* player1 = new HumanPlayer("X", Player::ColorOfPlayer::BLACK);
+	Player* player2 = new HumanPlayer("O", Player::ColorOfPlayer::WHITE);
 
 	//allocate on stack
 	//currently there is only one type of logic - no need to allocate dynamically
 	StandardMoveLogic ml;
-	ViewByConsole v;
-	GameManager gf(b, p1, p2, &ml);
+	ViewByConsole view;
+	GameManager gf(board, p1, p2, &ml);
 
 	//play game
 	gf.playGame();

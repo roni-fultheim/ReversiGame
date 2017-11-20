@@ -25,9 +25,10 @@ void GameManager::playGame() {
 	 * The user select a point, and the board update acoording to the
 	 *  selected point.
 	 */
-	Location move;
+
 	//while game is not over - keep playing
-	while (!board_->isBoardFull()) {
+	while (!board_->isBoardFull())
+	{
 		//display current turn
 		view_->messageForTurn(currPlayer_);
 
@@ -40,7 +41,7 @@ void GameManager::playGame() {
 			view_->messagePossibleMoves(currPlayer_->getPossibleMoves());
 
 			//get next player's move
-			move = currPlayer_->getNextMove(view_, logic_, board_, oppPlayer_);
+			Location move = currPlayer_->getNextMove(view_, logic_, board_, oppPlayer_);
 
 			//check that move is allowed
 			//while move isn't legal - get another move from player
@@ -124,9 +125,10 @@ bool GameManager::playTurn(Player* playing, Player* other) {
 	Location move = playing->getNextMove(view_, logic_, board_, other);
 
 	//while move isn't legal - get another move from player
-	while (!logic_->isMoveAllowed(move, playing, board_)) {
-		std::cout << "Illegal move. ";
-		move = playing->getNextMove();
+	while (!logic_->isMoveAllowed(move, playing, board_))
+	{
+		view_->messageIllegalMove();
+		move = playing->getNextMove(view_, logic_, board_, other);
 	}
 
 	//call logic to play move
@@ -134,19 +136,21 @@ bool GameManager::playTurn(Player* playing, Player* other) {
 	//update other player's options after playing move
 	logic_->updateMoveOptions(other, board_);
 
+	// TODO : YAEL - ask Roni
 	//save location of last move made in game
-	lastMove_.set(move);
+	//lastMove_.set(move);
 
 	//mark that player has played
 	return true;
 }
 
 
-void GameManager::showWinner() {
-	if (currPlayer_->gerScore() > oppPlayer_->gerScore()) {
+void GameManager::showWinner()
+{
+	if (currPlayer_->getScore() > oppPlayer_->getScore()) {
 		view_->messageWinner(currPlayer_);
 	}
-	else if (currPlayer_->gerScore() < oppPlayer_->gerScore())
+	else if (currPlayer_->getScore() < oppPlayer_->getScore())
 	{
 		view_->messageWinner(oppPlayer_);
 	}

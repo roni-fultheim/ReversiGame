@@ -3,22 +3,21 @@
  * HumanPlayer.cpp
  */
 
-#include "HumanPlayer.h"
+
 #include <iostream>
 #include <limits>
+#include "MoveLogic.h"
+#include "HumanPlayer.h"
 
 using namespace std;
 
 
-//constructor calling the parent class's (Player's) constructor
-HumanPlayer::HumanPlayer(const std::string& name, const Player::ColorOfPlayer& c): Player(name, c) {}
-
-
-Location HumanPlayer::getNextMove(const ViewGame& v, const MoveLogic& logic, const Board& b, const Player& other) {
+Location HumanPlayer::getNextMove(ViewGame* view, MoveLogic* logic, Board* board, Player* other)
+{
 	int row, column;
 
 	//ask the player to insert chosen location in the format (row column), space separated
-	v.messageEnterMove();
+	view->messageEnterMove();
 	cin >> row >> column;
 
 	//input validation
@@ -28,7 +27,7 @@ Location HumanPlayer::getNextMove(const ViewGame& v, const MoveLogic& logic, con
 		//ignoring the rest of the input
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		//re-asking for move
-		v.messageInvalidMove();
+		view.messageInvalidMove();
 		cin >> row >> column;
 	}
 

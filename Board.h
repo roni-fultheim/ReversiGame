@@ -44,6 +44,8 @@ class Board {
 		 */
 		int size() const;
 
+		ElementInBoard** getBoard()const;
+
 		/**
 		 * Checks if the square in a given location is white.
 		 * @param loc square's location

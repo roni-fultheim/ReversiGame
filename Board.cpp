@@ -4,6 +4,7 @@
  */
 
 #include <cstdlib>
+#include <stdexcept>
 #include "Board.h"
 
 using namespace std;
@@ -57,6 +58,11 @@ Board::~Board() {
 	}
 	//delete first column
 	delete gameBoard_;
+}
+
+Board::ElementInBoard**Board::getBoard()const
+{
+	return gameBoard_;
 }
 
 

@@ -8,6 +8,8 @@
 #include "Board.h"
 #include "Player.h"
 
+using namespace std;
+
 // this cladd represent the view of the game. all the type of the function
 // are pure virtual.
 
@@ -24,7 +26,7 @@ class ViewGame {
 		virtual void messageForTurn (Player* curPlayer) const = 0;
 
 		// message of possible moves
-		virtual void messagePossibleMoves(std::vector<Location> &possibleMoves) const = 0;
+		virtual void messagePossibleMoves(const vector<Location>& possibleMoves) const = 0;
 
 		//returns next move that player chose
 		virtual Location getMoveFromPlayer() const = 0;

@@ -11,6 +11,8 @@
 #include "MoveLogic.h"
 #include "Player.h"
 #include "Location.h"
+#include "ViewByConsole.h"
+#include "HumanPlayer.h"
 
 /**
  * Controls the game flow of a Reversi game when given a board, two players

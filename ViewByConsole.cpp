@@ -28,13 +28,13 @@ void ViewByConsole::printBoard(Board::ElementInBoard** board, int sizeOfBoard) c
 		{
 			switch(board[i][j])
 			{
-			case Board::Black:
+			case Board::BLACK:
 				cout << " X |";
 				break;
-			case Board::White:
+			case Board::WHITE:
 				cout << " O |";
 				break;
-			case Board::Empty:
+			case Board::EMPTY:
 				cout << "   |";
 				break;
 			default:
